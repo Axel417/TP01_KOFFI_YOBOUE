@@ -36,7 +36,10 @@ public class ExperimentServlet extends HttpServlet {
             out.println("<head>");
             out.println("<title>Servlet ExperimentServlet</title>");            
             out.println("</head>");
+            out.println("<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">\n");
+            
             out.println("<body>");
+            out.println("<div class='container'>");
             out.println("<h1 align='center'>Ma première Servlet</h1> <br><br>");
             out.println("<h3>Informations concernant l'adresse IP et le navigateur utilisé par le client :</h3>");
             out.println("<p>Adressee IP du client : "  +request.getRemoteAddr()+"</p>");
@@ -54,6 +57,7 @@ public class ExperimentServlet extends HttpServlet {
             out.println("<p>Accept-charset : "  +request.getHeader("Accept-charset")+":</p>"); 
             out.println("<p>Keep-alive : "  +request.getHeader("keep-Alive")+"</p>");
             out.println("<p>Connection : "  +request.getHeader("connection")+"</p>");
+            out.println("</div>");
             out.println("</body>");
             out.println("</html>");
         }
