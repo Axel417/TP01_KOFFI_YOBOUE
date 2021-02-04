@@ -5,6 +5,10 @@
  */
 package PackageServlet;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -29,16 +33,42 @@ public class EtudiantsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+
+            String line = "";
+            
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EtudiantsServlet</title>");            
+            out.println("<title>Servlet EtudiantsServlet</title>");
             out.println("</head>");
+            out.println("<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css\" integrity=\"sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm\" crossorigin=\"anonymous\">");
             out.println("<body>");
-            out.println("<h1>Servlet EtudiantsServlet at " + request.getContextPath() + "</h1>");
+            out.println("<div class='container'>");
+            out.println("<h1><center>Liste des étudiants</center></h1>");
+            out.println("<table class='table table-striped' border='1px'>");
+            out.println("<tr>");
+            out.println("<th>Nom</th>");
+            out.println("<th>Prenom</th>");
+            out.println("<th>Email</th>");
+            out.println("</tr>");
+            out.println("</div>");
+            try {
+                BufferedReader br = new BufferedReader(new FileReader("etudiants.csv"));
+                while ((line = br.readLine()) != null) {
+                    String[] donne = line.split(",");
+                    out.println("<tr>");
+                    out.println("<td>" + donne[0] + "</td>");
+                    out.println("<td>" + donne[1] + "</td>");
+                    out.println("<td>" + donne[2] + "</td>");
+                    out.println("</tr>");
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            out.println("<table>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -56,7 +86,9 @@ public class EtudiantsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
+
     }
 
     /**
@@ -70,7 +102,28 @@ public class EtudiantsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        //   processRequest(request, response);
+        String Comma_delimiter = ",";
+        String new_line_separator = "\n";
+        String file_header = "nom,prenom,email";
+        String nom = request.getParameter("nom");
+        String prenom = request.getParameter("prenom");
+        String email = request.getParameter("email");
+        FileWriter filewritter = new FileWriter("etudiants.csv", true);
+        // filewritter.append(file_header);
+
+        filewritter.append(nom);
+        filewritter.append(Comma_delimiter);
+        filewritter.append(prenom);
+        filewritter.append(Comma_delimiter);
+        filewritter.append(email);
+        filewritter.append(Comma_delimiter);
+        filewritter.append(new_line_separator);
+        filewritter.flush();
+        filewritter.close();
+        PrintWriter out = response.getWriter();
+        out.println("l'utilisateur " + nom + " a bien été enregistré");
+        doGet(request, response);
     }
 
     /**
